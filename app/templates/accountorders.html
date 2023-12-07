@@ -1,0 +1,109 @@
+
+{% extends 'base.html' %}
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages%}
+{% for category, message in messages %}
+{% if category == 'success' %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+<!--If username already exists-->
+{% if category == 'error' %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+{% endfor %}
+{% endif%}
+{% endwith %}
+
+<head>
+  <title>Your Orders</title>
+</head>
+<style>
+h1 {text-align: center;}
+
+</style>
+<p></p>
+<h1>My Orders</h1>
+
+
+<table class="container table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Order Number</th>
+      <th scope="col">Address</th>
+      <th scope="col">Date Ordered</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for pass in passingdata%}
+    <tr>
+      
+      <td>order{{pass.OrderNumber}}</td>
+      <td>{{pass.Address}}</td>
+      <td>{{pass.OrderDate}}</td>
+      <td>£ {{pass.Price}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<br>
+<br>
+<hr>
+<h1>Products</h1>
+<table class="container table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Order Number</th>
+      <th scope="col">Product Code</th>
+      <th scope="col">Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    {%for pass in passingproductsdata%}
+    <tr>
+      <td>order{{pass[2]}}</td>
+      <td>{{pass[0]}}</td>
+      <td>{{pass[1]}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+
+<!--This is the test area.--->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

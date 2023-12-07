@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages%}
+{% for category, message in messages %}
+{% if category == 'success' %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+<!--If username already exists-->
+{% if category == 'error' %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+{% endfor %}
+{% endif%}
+{% endwith %}
+<head>
+  <title>Login</title>
+</head>
+<div class="container">
+  <div class="p-5 m-5">
+      <div class="col-lg-6 mx-auto border rounded pt-5">
+          <h3 class="alert alert-dark border rounded">Login</h3>
+          <form action="/login" method="post">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            {% if error%}
+                <div class="alert alert-danger" role="alert">
+                    {{error}}
+                </div>
+            {% endif %} 
+              <div class="mb-3">
+                  <label for="exampleInputPassword1" class="form-label" >Username</label>
+                  <input type="text" class="form-control" name="username" placeholder="username" value="{{request.form.username}}">
+              </div>
+              <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" class="form-control"  name="password" placeholder="password" value="{{request.form.password}}">
+              </div>
+              <button type="submit" class="btn btn-outline-primary" value="Login" id="submit">Submit</button>
+          </form>
+      </div>
+  </div>
+</div>
+
+{% endblock %}

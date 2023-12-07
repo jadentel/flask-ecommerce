@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages%}
+{% for category, message in messages %}
+{% if category == 'success' %}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+<!--If username already exists-->
+{% if category == 'error' %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  {{message}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+
+{% endfor %}
+{% endif%}
+{% endwith %}
+
+<!--CSS-->
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+
+    <title>Ecommerce</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='vote.js') }}" ></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="...">
+
+    <style>
+      .vote {
+          display: inline-block;
+          margin: 5px;
+          padding: 10px 15px;
+          text-align: center;
+          text-decoration: none;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          cursor: pointer;
+          background-color: #f0f0f0;
+          color: #333;
+      }
+  
+      .vote i {
+          margin-right: 5px;
+      }
+  </style>
+</head>
+
+<body>
+<br>
+<div class="container-fluid mt-3">
+    <div class="row">
+        <!--products-->
+        <div id="products" class="col-lg-13 mx-auto">
+            <div class="row mx-auto">
+                {% for product in products %}
+                <div class="card mx-auto mb-3" style="width: 18rem;">
+                    <form method="post" action="/add">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                      
+                      <img src="{{ product.Image }}" height="250" width="350" class="card-img-top" alt="...">
+                      <div class="card-body">
+                          <p class="card-title"><b>{{ product.ProductName }}</b></p>
+                          <p class="card=text">{{ product.Description }}</p>
+                          <p class="card-text"><b>£ {{ product.Price }}</b></p>
+                          <a class="vote" data-product-id="{{ product.Productid }}" onclick="vote('up')">
+                            <i class="far fa-thumbs-up" id="up"></i><span id="sup">{{ product.likes }}</span>
+                          </a>
+                        
+                          <a class="vote" data-product-id="{{ product.Productid }}" onclick="vote('down')">
+                            <i class="far fa-thumbs-down" id="down"></i><span id="sdown">{{ product.dislikes }}</span>
+                          </a>
+
+                        </p>
+                      </div>
+                        {% if product.Stock>1 %}
+                        <div class="cart-action">
+                          <input type="hidden" name="code" value="{{product.Code}}"/>
+                          <input type="text" class="product-quantity" name="quantity" value="1" size="2" />
+                          <input type="submit" value="Add to Cart" class="btnAddAction btn btn-outline-success border btn-sm" />
+                        </div>
+                        {% else %}
+                        <div class="cart-action">
+                          <input type="hidden" name="code" value="{{product.Code}}"/>
+                          <input type="text" class="product-quantity" name="quantity" value="1" size="2" />
+                          <input type="submit" value="Out of Stock" class="btnAddAction btn btn-secondary border btn-sm" disabled />
+                        </div>
+                        {% endif %}
+                      </form>
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
